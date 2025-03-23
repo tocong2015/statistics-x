@@ -1,0 +1,9 @@
+{
+  "module": {
+    "name": "statistics_x",
+    "type": "har",
+    "deviceTypes": [
+      "default"
+    ]
+  }
+}
