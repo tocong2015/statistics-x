@@ -4,6 +4,7 @@
  * @description:埋点类型
  **/
 export enum StatisticsType {
+  NO_AUTO, //手动埋点
   APP_START, //应用启动
   APP_START_PASSIVELY, //被动打开
   APP_END, //应用退出
@@ -15,7 +16,7 @@ export enum StatisticsType {
   //APP_PUSH_CLICK, //推送点击
 }
 
-export function  getEventType(event: StatisticsType) {
+export function getEventType(event: StatisticsType) {
   let eventName = ""
   switch (event) {
     case StatisticsType.APP_START:
@@ -42,9 +43,9 @@ export function  getEventType(event: StatisticsType) {
     case StatisticsType.APP_START_PASSIVELY:
       eventName = "$AppStartPassively"
       break;
-   /* case StatisticsType.APP_PUSH_CLICK:
-      eventName = "$AppPushClick"
-      break;*/
+    /* case StatisticsType.APP_PUSH_CLICK:
+       eventName = "$AppPushClick"
+       break;*/
   }
 
   return eventName;

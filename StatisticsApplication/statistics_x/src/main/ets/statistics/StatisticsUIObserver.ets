@@ -316,6 +316,24 @@ export class StatisticsUIObserver {
     }
   }
 
+  sendNoAutoStatistics(customProperty: object, currentUrl?: string, refererUrl?: string) {
+    let property: object = new Object()
+    property["is_first_day"] = this._isFirstDay
+    property["is_first_time"] = this._isFirstLaunch
+    property["referer_url"] = refererUrl ?? this.refererPageUrl
+    property["current_url"] = currentUrl ?? this.currentPageUrl
+
+    for (let key of Object.keys(customProperty)) {
+      property[key] = customProperty[key]
+    }
+    StatisticsManager.getInstance().config?.statisticsGetCallback!(StatisticsType.NO_AUTO,
+      property,
+      undefined,
+      StatisticsManager.getInstance().config!.persistentProperty,
+      StatisticsManager.getInstance().config!.dynamicProperty?.()
+    )
+  }
+
 
   private getPageViewTime(pageUrl: string, pageId: string) {
     let viewPageTime = this.pageDurationMap.get(pageUrl + pageId)

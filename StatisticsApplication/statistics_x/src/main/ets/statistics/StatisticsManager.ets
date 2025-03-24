@@ -76,6 +76,15 @@ export class StatisticsManager {
 
   }
 
+  /**
+   * @author tc
+   * @date 2025/3/24  22:24
+   * @desc 手动埋点
+   **/
+  sendNoAutoStatistics(property: object, currentUrl?: string, refererUrl?: string) {
+    StatisticsUIObserver.getInstance().sendNoAutoStatistics(property, currentUrl, refererUrl)
+  }
+
 
   /**
    * @author: tc
