@@ -1,10 +1,11 @@
-import { PreferenceCache } from "../cache/PreferenceCache";
-import { PreferenceUtil } from "../cache/PreferencesUtil";
-import Logger from "../Log/Logger";
+import { PreferenceCache } from '../cache/PreferenceCache';
+import Logger from '../Log/Logger';
 
-import { StatisticsConfig } from "./StatisticsConfig";
-import { StatisticsType } from "./StatisticsType";
-import { StatisticsUIObserver } from "./StatisticsUIObserver";
+import { StatisticsConfig } from './StatisticsConfig';
+import { StatisticsType } from './StatisticsType';
+import { StatisticsUIObserver } from './StatisticsUIObserver';
+import { util } from '@kit.ArkTS';
+import { UIAbility } from '@kit.AbilityKit';
 
 /**
  * @author: tc
@@ -38,10 +39,26 @@ export class StatisticsManager {
   register(config: StatisticsConfig, uiContext: UIContext, context: Context) {
     this._config = config
     this.uiContext = uiContext
+    //this.initAspect()
     //初始化缓存
     PreferenceCache.init(context)
 
     this.addUIObserver()
+
+  }
+
+   initAspect() {
+     console.debug("增加aop")
+     try {
+       util.Aspect.addBefore(UIAbility, "onForeground", false,
+         (instance: UIAbility,) => {
+           console.debug("监听到ability 初始化")
+
+
+         })
+     }catch (e) {
+       console.error("增加aop错误："+e)
+     }
 
   }
 

@@ -4,7 +4,7 @@ import { hash } from "@kit.CoreFileKit";
 import { HashMap } from "@kit.ArkTS";
 
 export class StatisticsConfig {
-  private _enableLog: boolean = false; //开始日志
+  private _enableLog: boolean = true; //开始日志
   private _autoTrackTypes: Set<StatisticsType> = new Set(); //忽略的事件的类型
   private _autoTrackIgnorePage?: Set<string> | undefined; //忽略的页面路径
 

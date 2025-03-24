@@ -32,7 +32,6 @@ export class StatisticsUIObserver {
   private constructor() {
     this.validateIsFirstDay()
     this.validateIsFirstLaunch()
-
   }
 
 
