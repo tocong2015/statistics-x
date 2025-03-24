@@ -2,7 +2,7 @@ import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.Ab
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
 import { getEventType, mapToJson, StatisticsConfig, StatisticsManager, StatisticsType } from 'statistics_x';
-import { HashMap, JSON } from '@kit.ArkTS';
+import { HashMap, JSON, util } from '@kit.ArkTS';
 import Logger from 'statistics_x/src/main/ets/Log/Logger';
 
 const DOMAIN = 0x0000;
@@ -11,7 +11,11 @@ export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
     this.context.getApplicationContext().setColorMode(ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET);
     hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onCreate');
-    StatisticsManager.getInstance().initAspect()
+
+  }
+
+  onNewWant(want: Want, launchParam: AbilityConstant.LaunchParam): void {
+
   }
 
   onDestroy(): void {
@@ -81,8 +85,7 @@ export default class EntryAbility extends UIAbility {
 
     }
 
-    StatisticsManager.getInstance().register(config, uiContext, this.context)
-
+    StatisticsManager.getInstance().register(config, uiContext, this.context,EntryAbility)
 
   }
 }

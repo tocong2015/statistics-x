@@ -1,4 +1,5 @@
 import { router } from '@kit.ArkUI';
+import Logger from 'statistics_x/src/main/ets/Log/Logger';
 
 @Entry
 @Component
@@ -21,5 +22,13 @@ struct Index {
     }
     .height('100%')
     .width('100%')
+  }
+
+  aboutToAppear(): void {
+
+  }
+
+  onPageShow(): void {
+    Logger.debug("首页展示")
   }
 }

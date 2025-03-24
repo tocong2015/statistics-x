@@ -6,6 +6,7 @@ import { StatisticsManager, StatisticsType } from "../../../../Index"
 import { PreferenceCache } from "../cache/PreferenceCache"
 import { PreferenceFileType } from "../cache/PreferenceFileType"
 import { TimeUtil } from "../util/TimeUtil"
+import { hiAppEvent } from "@kit.PerformanceAnalysisKit"
 
 /**
  * @author: tc
@@ -171,6 +172,7 @@ export class StatisticsUIObserver {
     }
   }
 
+
   /**
    * @author: tc
    * @time: 2025/3/24 15:48
@@ -181,8 +183,8 @@ export class StatisticsUIObserver {
 
     property["referer_url"] = this.refererPageUrl
     property["current_url"] = this.currentPageUrl
-    property["$is_first_day"] = this._isFirstDay
-    property["$is_first_time"] = this._isFirstLaunch
+    property["is_first_day"] = this._isFirstDay
+    property["is_first_time"] = this._isFirstLaunch
     property["element_type"] = elementType
     property["element_content"] = elementContent
     return property
@@ -193,8 +195,8 @@ export class StatisticsUIObserver {
     let property: object = new Object()
     property["referer_url"] = refererUrl ?? this.refererPageUrl
     property["current_url"] = currentUrl ?? this.currentPageUrl
-    property["$is_first_day"] = this._isFirstDay
-    property["$is_first_time"] = this._isFirstLaunch
+    property["is_first_day"] = this._isFirstDay
+    property["is_first_time"] = this._isFirstLaunch
     return property
   }
 
@@ -203,8 +205,8 @@ export class StatisticsUIObserver {
 
     property["referer_url"] = refererUrl ?? this.refererPageUrl
     property["current_url"] = currentUrl ?? this.currentPageUrl
-    property["$is_first_day"] = this._isFirstDay
-    property["$is_first_time"] = this._isFirstLaunch
+    property["is_first_day"] = this._isFirstDay
+    property["is_first_time"] = this._isFirstLaunch
     let nowTime = new Date().getTime()
     let pageViewTime = this.getPageViewTime(currentUrl ?? this.currentPageUrl, pageId + "")
     if (pageViewTime != undefined) {
@@ -212,6 +214,108 @@ export class StatisticsUIObserver {
     }
     return property
   }
+
+
+  sendAppDestroyStatisticsProperty() {
+    if (StatisticsManager.getInstance().haveSpecialStatisticsType(StatisticsType.APP_END) &&
+      StatisticsManager.getInstance().config != null &&
+    StatisticsManager.getInstance().config.statisticsGetCallback) {
+      let property: object = new Object()
+      property["is_first_day"] = this._isFirstDay
+      property["is_first_time"] = this._isFirstLaunch
+
+      StatisticsManager.getInstance().config?.statisticsGetCallback!(StatisticsType.APP_END,
+        property, undefined,
+        StatisticsManager.getInstance().config!.persistentProperty,
+        StatisticsManager.getInstance().config!.dynamicProperty?.())
+    }
+  }
+
+  sendAppStartStatisticsProperty() {
+    if (StatisticsManager.getInstance().haveSpecialStatisticsType(StatisticsType.APP_START) &&
+      StatisticsManager.getInstance().config != null &&
+    StatisticsManager.getInstance().config.statisticsGetCallback) {
+      let property: object = new Object()
+      property["is_first_day"] = this._isFirstDay
+      property["is_first_time"] = this._isFirstLaunch
+      StatisticsManager.getInstance().config?.statisticsGetCallback!(StatisticsType.APP_START,
+        property,
+        undefined,
+        StatisticsManager.getInstance().config!.persistentProperty,
+        StatisticsManager.getInstance().config!.dynamicProperty?.()
+      )
+    }
+  }
+
+
+  sendAppStartPassively() {
+    if (StatisticsManager.getInstance().haveSpecialStatisticsType(StatisticsType.APP_START_PASSIVELY) &&
+      StatisticsManager.getInstance().config != null &&
+    StatisticsManager.getInstance().config.statisticsGetCallback) {
+
+      StatisticsManager.getInstance().config?.statisticsGetCallback!(StatisticsType.APP_START_PASSIVELY,
+        this.createPageViewStatisticsProperty(),
+        undefined,
+        StatisticsManager.getInstance().config!.persistentProperty,
+        StatisticsManager.getInstance().config!.dynamicProperty?.()
+      )
+    }
+  }
+
+
+  sendAppInstall() {
+    if (this._isFirstLaunch && StatisticsManager.getInstance().haveSpecialStatisticsType(StatisticsType.APP_INSTALL) &&
+      StatisticsManager.getInstance().config != null &&
+    StatisticsManager.getInstance().config.statisticsGetCallback) {
+
+      StatisticsManager.getInstance().config?.statisticsGetCallback!(StatisticsType.APP_INSTALL,
+        new Object(),
+        undefined,
+        StatisticsManager.getInstance().config!.persistentProperty,
+        StatisticsManager.getInstance().config!.dynamicProperty?.()
+      )
+    }
+  }
+
+  sendAppCrash() {
+
+    if (StatisticsManager.getInstance().haveSpecialStatisticsType(StatisticsType.APP_CRASH) &&
+      StatisticsManager.getInstance().config != null &&
+    StatisticsManager.getInstance().config.statisticsGetCallback) {
+      hiAppEvent.addWatcher({
+        name: "crash_watcher",
+        appEventFilters: [{
+          domain: hiAppEvent.domain.OS,
+          names: [hiAppEvent.event.APP_CRASH]
+        }],
+        onReceive: (domain: string, appEventGroups: Array<hiAppEvent.AppEventGroup>) => {
+          try {
+            for (let appEventGroupsElement of appEventGroups) {
+              for (let appEventInfosElement of appEventGroupsElement.appEventInfos) {
+                let crashTrace = JSON.stringify(appEventInfosElement.params['exception'])
+                let crashType: string = appEventInfosElement.params['crash_type']
+                let property: object = new Object()
+                property["is_first_day"] = this._isFirstDay
+                property["is_first_time"] = this._isFirstLaunch
+                property["crash_trace"] = crashTrace
+                property["crash_type"] = crashType
+                StatisticsManager.getInstance().config?.statisticsGetCallback!(StatisticsType.APP_CRASH,
+                  property,
+                  undefined,
+                  StatisticsManager.getInstance().config!.persistentProperty,
+                  StatisticsManager.getInstance().config!.dynamicProperty?.()
+                )
+              }
+            }
+          } catch (e) {
+          }
+        }
+      })
+
+
+    }
+  }
+
 
   private getPageViewTime(pageUrl: string, pageId: string) {
     let viewPageTime = this.pageDurationMap.get(pageUrl + pageId)
@@ -232,5 +336,6 @@ export class StatisticsUIObserver {
   private validateIsFirstLaunch() {
     let firstLaunch = this.preferenceUtil.getSync("first_launch", true) as boolean
     this._isFirstLaunch = firstLaunch
+    this.preferenceUtil.getSync("first_launch", false)
   }
 }
