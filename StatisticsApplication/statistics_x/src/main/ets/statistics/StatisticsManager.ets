@@ -14,8 +14,6 @@ import { StatisticsUIObserver } from "./StatisticsUIObserver";
 export class StatisticsManager {
   private static instance: StatisticsManager;
   private _config: StatisticsConfig | null = null;
-
-
   private uiContext: UIContext | null = null
 
   private constructor() {
@@ -27,7 +25,8 @@ export class StatisticsManager {
     }
     return StatisticsManager.instance;
   }
-  public get config(): StatisticsConfig  {
+
+  public get config(): StatisticsConfig {
     return this._config!;
   }
 
@@ -73,5 +72,14 @@ export class StatisticsManager {
       let viewScreenCallback = StatisticsUIObserver.getInstance().getNaviViewScreenCallback()
       viewScreenCallback(info)
     })
+  }
+
+  haveSpecialStatisticsType(type: StatisticsType) {
+    if (this.config != null) {
+      return this._config!.autoTrackTypes.has(type)
+    } else {
+      return false
+    }
+
   }
 }

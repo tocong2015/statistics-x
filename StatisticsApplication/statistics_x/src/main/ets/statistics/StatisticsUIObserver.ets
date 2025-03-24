@@ -72,7 +72,8 @@ export class StatisticsUIObserver {
         Logger.debug("按钮点击:在navi页面:" + JSON.stringify(pageInfo.routerPageInfo))
       }
 
-      if (StatisticsManager.getInstance().config != null &&
+      if (StatisticsManager.getInstance().haveSpecialStatisticsType(StatisticsType.APP_CLICK) &&
+        StatisticsManager.getInstance().config != null &&
       StatisticsManager.getInstance().config.statisticsGetCallback) {
 
         StatisticsManager.getInstance().config.statisticsGetCallback!(StatisticsType.APP_CLICK,
@@ -87,28 +88,49 @@ export class StatisticsUIObserver {
     return (info: uiObserver.NavDestinationSwitchInfo) => {
       //先判断 from
       let fromUrl = ""
+      let pageId = ""
       if (typeof info.from == "string") {
         fromUrl = info.from
       } else {
         fromUrl = info.from.name.toString()
+        pageId = info.from.navDestinationId
       }
       //$AppPageLeave  页面离开
       Logger.debug(":page离开:\n" + "--上一页面--:" + this.refererPageUrl + "\n" + "--当前页面--:" +
         fromUrl)
       //   SAEventCreator.createSAEventData(SAAutoTrackType.APP_PAGE_LEAVE, this.refererPageUrl, fromUrl)
 
+      if (StatisticsManager.getInstance().haveSpecialStatisticsType(StatisticsType.APP_PAGE_LEAVE) &&
+      StatisticsManager.getInstance().config.statisticsGetCallback) {
+        StatisticsManager.getInstance().config?.statisticsGetCallback!(StatisticsType.APP_PAGE_LEAVE,
+          this.createPageLeaveStatisticsProperty(pageId, fromUrl, this.refererPageUrl), undefined,
+          StatisticsManager.getInstance().config!.persistentProperty,
+          StatisticsManager.getInstance().config!.dynamicProperty?.())
+      }
+
       this.refererPageUrl = fromUrl
-      //在判断to
+      //再判断to
       let toUrl = ""
+      let toPageId: string = ""
       if (typeof info.to == "string") {
         toUrl = info.to
       } else {
         toUrl = info.to.name.toString()
+        toPageId = info.to.navDestinationId
       }
       //$AppViewScreen 页面展示
-      this.pageDurationMap.set(toUrl, new Date().getTime())
+      this.pageDurationMap.set(toUrl + toPageId, new Date().getTime())
       Logger.debug(":page展示:\n" + "--上一页面--:" + this.refererPageUrl + "\n" + "--当前页面--:" + toUrl)
       this.currentPageUrl = toUrl
+
+      if (StatisticsManager.getInstance().haveSpecialStatisticsType(StatisticsType.APP_VIEW_SCREEN) &&
+        StatisticsManager.getInstance().config != null &&
+      StatisticsManager.getInstance().config.statisticsGetCallback) {
+        StatisticsManager.getInstance().config?.statisticsGetCallback!(StatisticsType.APP_VIEW_SCREEN,
+          this.createPageViewStatisticsProperty(), undefined,
+          StatisticsManager.getInstance().config!.persistentProperty,
+          StatisticsManager.getInstance().config!.dynamicProperty?.())
+      }
 
       //  let statisticData = SAEventCreator.createSAEventData(SAAutoTrackType.APP_VIEW_SCREEN, this.refererPageUrl, toUrl)
       //发送数据
@@ -124,7 +146,8 @@ export class StatisticsUIObserver {
         Logger.debug("--statistics--:show" + JSON.stringify(info))
         this.currentPageUrl = info.name
         this.pageDurationMap.set(info.name + info.pageId, new Date().getTime())
-        if (StatisticsManager.getInstance().config != null &&
+        if (StatisticsManager.getInstance().haveSpecialStatisticsType(StatisticsType.APP_VIEW_SCREEN) &&
+          StatisticsManager.getInstance().config != null &&
         StatisticsManager.getInstance().config.statisticsGetCallback) {
           StatisticsManager.getInstance().config?.statisticsGetCallback!(StatisticsType.APP_VIEW_SCREEN,
             this.createPageViewStatisticsProperty(), undefined,
@@ -135,7 +158,8 @@ export class StatisticsUIObserver {
       } else if (info.state == uiObserver.RouterPageState.ON_PAGE_HIDE) {
         Logger.debug("--statistics--:hide" + JSON.stringify(info))
 
-        if (StatisticsManager.getInstance().config != null &&
+        if (StatisticsManager.getInstance().haveSpecialStatisticsType(StatisticsType.APP_PAGE_LEAVE) &&
+          StatisticsManager.getInstance().config != null &&
         StatisticsManager.getInstance().config.statisticsGetCallback) {
           StatisticsManager.getInstance().config?.statisticsGetCallback!(StatisticsType.APP_PAGE_LEAVE,
             this.createPageLeaveStatisticsProperty(info.pageId), undefined,
@@ -165,24 +189,25 @@ export class StatisticsUIObserver {
     return property
   }
 
-  private createPageViewStatisticsProperty(): object {
+  private createPageViewStatisticsProperty(currentUrl?: string, refererUrl?: string): object {
+
     let property: object = new Object()
-    property["referer_url"] = this.refererPageUrl
-    property["current_url"] = this.currentPageUrl
+    property["referer_url"] = refererUrl ?? this.refererPageUrl
+    property["current_url"] = currentUrl ?? this.currentPageUrl
     property["$is_first_day"] = this._isFirstDay
     property["$is_first_time"] = this._isFirstLaunch
     return property
   }
 
-  private createPageLeaveStatisticsProperty(pageId: string): object {
+  private createPageLeaveStatisticsProperty(pageId: string, currentUrl?: string, refererUrl?: string): object {
     let property: object = new Object()
 
-    property["referer_url"] = this.refererPageUrl
-    property["current_url"] = this.currentPageUrl
+    property["referer_url"] = refererUrl ?? this.refererPageUrl
+    property["current_url"] = currentUrl ?? this.currentPageUrl
     property["$is_first_day"] = this._isFirstDay
     property["$is_first_time"] = this._isFirstLaunch
     let nowTime = new Date().getTime()
-    let pageViewTime = this.getPageViewTime(this.currentPageUrl, pageId + "")
+    let pageViewTime = this.getPageViewTime(currentUrl ?? this.currentPageUrl, pageId + "")
     if (pageViewTime != undefined) {
       property["event_duration"] = (nowTime - pageViewTime).toString()
     }
