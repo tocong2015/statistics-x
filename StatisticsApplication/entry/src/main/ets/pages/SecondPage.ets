@@ -1,9 +1,7 @@
-import { router } from '@kit.ArkUI';
-
 @Entry
 @Component
 struct Index {
-  @State message: string = 'Hello World';
+  @State message: string = 'Second Page';
 
   build() {
     RelativeContainer() {
@@ -16,7 +14,7 @@ struct Index {
           middle: { anchor: '__container__', align: HorizontalAlign.Center }
         })
         .onClick(() => {
-         router.pushUrl({url:"pages/SecondPage"})
+          this.message = 'Welcome';
         })
     }
     .height('100%')

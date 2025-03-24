@@ -1,6 +1,20 @@
 {
   "app": {
-    "signingConfigs": [],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/taocong/.ohos/config/default_StatisticsApplication_Ixn8FlfySRTJQmEHsCie50L8iDIT3-RAlFUetfO7sTc=.cer",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001A149695E2F3D5C6233848703D73A5567183DA3998C15FCDF75243F0CD1C596166FEADE5A9B5C3",
+          "profile": "/Users/taocong/.ohos/config/default_StatisticsApplication_Ixn8FlfySRTJQmEHsCie50L8iDIT3-RAlFUetfO7sTc=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/taocong/.ohos/config/default_StatisticsApplication_Ixn8FlfySRTJQmEHsCie50L8iDIT3-RAlFUetfO7sTc=.p12",
+          "storePassword": "0000001AC321103B8D78C361D6F98A937E2EDC47CEF6493026D3292112E8BBBE47ADF70E1040D38732D1"
+        }
+      }
+    ],
     "products": [
       {
         "name": "default",
