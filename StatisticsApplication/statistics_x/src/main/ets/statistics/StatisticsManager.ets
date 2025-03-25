@@ -5,7 +5,7 @@ import { StatisticsConfig } from './StatisticsConfig';
 import { StatisticsType } from './StatisticsType';
 import { StatisticsUIObserver } from './StatisticsUIObserver';
 import { util } from '@kit.ArkTS';
-import { UIAbility } from '@kit.AbilityKit';
+import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
 
 /**
  * @author: tc
@@ -36,31 +36,55 @@ export class StatisticsManager {
    * @time: 2025/3/24 13:42
    * @description:注册
    **/
-  register(config: StatisticsConfig, uiContext: UIContext, context: Context) {
+  register(config: StatisticsConfig, uiContext: UIContext, context: Context, entryAbility: Object) {
     this._config = config
     this.uiContext = uiContext
-    //this.initAspect()
+
     //初始化缓存
     PreferenceCache.init(context)
+    this.initAspect(entryAbility)
 
     this.addUIObserver()
 
   }
 
-   initAspect() {
-     console.debug("增加aop")
-     try {
-       util.Aspect.addBefore(UIAbility, "onForeground", false,
-         (instance: UIAbility,) => {
-           console.debug("监听到ability 初始化")
+  private initAspect(entryAbility: Object) {
 
+    util.Aspect.addBefore(entryAbility, "onBackground", false, () => {
+      Logger.debug("进入后台")
+      StatisticsUIObserver.getInstance().sendAppDestroyStatisticsProperty()
+    })
 
-         })
-     }catch (e) {
-       console.error("增加aop错误："+e)
-     }
+    util.Aspect.addBefore(entryAbility, "onDestroy", false, () => {
+      Logger.debug("app销毁")
+      StatisticsUIObserver.getInstance().sendAppDestroyStatisticsProperty()
+    })
+
+    util.Aspect.addBefore(entryAbility, "onForeground", false, () => {
+      Logger.debug("进去前台")
+      StatisticsUIObserver.getInstance().sendAppStartStatisticsProperty()
+    })
+
+    util.Aspect.addBefore(entryAbility, "onNewWant", false, (want: Want, launchParam: AbilityConstant.LaunchParam) => {
+      Logger.debug("被动打开")
+      StatisticsUIObserver.getInstance().sendAppStartPassively()
+    })
+
+    StatisticsUIObserver.getInstance().sendAppInstall()
+    StatisticsUIObserver.getInstance().sendAppCrash()
+
 
   }
+
+  /**
+   * @author tc
+   * @date 2025/3/24  22:24
+   * @desc 手动埋点
+   **/
+  sendNoAutoStatistics(property: object, currentUrl?: string, refererUrl?: string) {
+    StatisticsUIObserver.getInstance().sendNoAutoStatistics(property, currentUrl, refererUrl)
+  }
+
 
   /**
    * @author: tc
@@ -97,6 +121,5 @@ export class StatisticsManager {
     } else {
       return false
     }
-
   }
 }
