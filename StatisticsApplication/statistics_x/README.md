@@ -1,4 +1,4 @@
-# statistics-x
+# statistics_x
 
 ---
 #### 专门为OpenHarmony开发的埋点库，支持非侵入式自动埋点和手动埋点，更加轻便和简单。
