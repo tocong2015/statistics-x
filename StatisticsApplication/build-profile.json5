@@ -5,13 +5,13 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "/Users/taocong/.ohos/config/default_StatisticsApplication_y5XjzBs2jHP0Vv6Zz1y2xGdijZCpqpJhUfqWzDztgFo=.cer",
+          "certpath": "/Users/taocong/.ohos/config/default_StatisticsApplication_Ixn8FlfySRTJQmEHsCie50L8iDIT3-RAlFUetfO7sTc=.cer",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001B1142341D563287672A0382D78C048956C28BF8A078E00E27C16E431255C5BA81B83C2E76ED1246",
-          "profile": "/Users/taocong/.ohos/config/default_StatisticsApplication_y5XjzBs2jHP0Vv6Zz1y2xGdijZCpqpJhUfqWzDztgFo=.p7b",
+          "keyPassword": "0000001B83D9EBCFDF5FE4EBEFA6623D5503398EE90207C64381ABB99B3C59AC3BBAD91A6938E5CBF03EB8",
+          "profile": "/Users/taocong/.ohos/config/default_StatisticsApplication_Ixn8FlfySRTJQmEHsCie50L8iDIT3-RAlFUetfO7sTc=.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "/Users/taocong/.ohos/config/default_StatisticsApplication_y5XjzBs2jHP0Vv6Zz1y2xGdijZCpqpJhUfqWzDztgFo=.p12",
-          "storePassword": "0000001BFEB49B16728F0D6241F1E7DD8E3F1CC4001570FD68229ED8577F78DF17E1514194D1C1AB42B3E3"
+          "storeFile": "/Users/taocong/.ohos/config/default_StatisticsApplication_Ixn8FlfySRTJQmEHsCie50L8iDIT3-RAlFUetfO7sTc=.p12",
+          "storePassword": "0000001B644DB385D9D868E74AF6E81C9AD26644FC52CBF9EC4A71BA0279E502DE7928FF4364DA6FBA586B"
         }
       }
     ],

@@ -1,4 +1,4 @@
-import Logger from "../Log/Logger";
+import Logger from "../Log/StatisticsLogger";
 import { StatisticsType } from "./StatisticsType";
 import { hash } from "@kit.CoreFileKit";
 import { HashMap } from "@kit.ArkTS";

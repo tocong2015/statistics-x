@@ -1,5 +1,5 @@
 import { router } from '@kit.ArkUI';
-import Logger from 'statistics_x/src/main/ets/Log/Logger';
+
 
 @Entry
 @Component
@@ -29,6 +29,6 @@ struct Index {
   }
 
   onPageShow(): void {
-    Logger.debug("首页展示")
+    console.debug("首页展示")
   }
 }

@@ -1,5 +1,5 @@
 import { PreferenceCache } from '../cache/PreferenceCache';
-import Logger from '../Log/Logger';
+import StatisticsLogger from '../Log/StatisticsLogger';
 
 import { StatisticsConfig } from './StatisticsConfig';
 import { StatisticsType } from './StatisticsType';
@@ -51,22 +51,22 @@ export class StatisticsManager {
   private initAspect(entryAbility: Object) {
 
     util.Aspect.addBefore(entryAbility, "onBackground", false, () => {
-      Logger.debug("进入后台")
+      StatisticsLogger.debug("进入后台")
       StatisticsUIObserver.getInstance().sendAppDestroyStatisticsProperty()
     })
 
     util.Aspect.addBefore(entryAbility, "onDestroy", false, () => {
-      Logger.debug("app销毁")
+      StatisticsLogger.debug("app销毁")
       StatisticsUIObserver.getInstance().sendAppDestroyStatisticsProperty()
     })
 
     util.Aspect.addBefore(entryAbility, "onForeground", false, () => {
-      Logger.debug("进去前台")
+      StatisticsLogger.debug("进去前台")
       StatisticsUIObserver.getInstance().sendAppStartStatisticsProperty()
     })
 
     util.Aspect.addBefore(entryAbility, "onNewWant", false, (want: Want, launchParam: AbilityConstant.LaunchParam) => {
-      Logger.debug("被动打开")
+      StatisticsLogger.debug("被动打开")
       StatisticsUIObserver.getInstance().sendAppStartPassively()
     })
 
@@ -93,7 +93,7 @@ export class StatisticsManager {
    **/
   private addUIObserver() {
     if (this._config?.autoTrackTypes.has(StatisticsType.APP_CLICK)) {
-      Logger.debug("注册点击事件监听")
+      StatisticsLogger.debug("注册点击事件监听")
       this.uiContext?.getUIObserver().on("willClick", (event: ClickEvent, node?: FrameNode) => {
         let clickObserver = StatisticsUIObserver.getInstance().getClickObserver()
         clickObserver(node, this.uiContext, event)
@@ -101,7 +101,7 @@ export class StatisticsManager {
     }
 
 
-    Logger.debug("注册页面事件监听")
+    StatisticsLogger.debug("注册页面事件监听")
 
     this.uiContext?.getUIObserver().on('routerPageUpdate', (info) => {
       let viewScreenCallback = StatisticsUIObserver.getInstance().getRouterViewScreenCallback()

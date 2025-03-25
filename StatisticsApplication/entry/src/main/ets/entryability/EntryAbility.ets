@@ -3,7 +3,8 @@ import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
 import { getEventType, mapToJson, StatisticsConfig, StatisticsManager, StatisticsType } from 'statistics_x';
 import { HashMap, JSON, util } from '@kit.ArkTS';
-import Logger from 'statistics_x/src/main/ets/Log/Logger';
+import StatisticsLogger from 'statistics_x/src/main/ets/Log/StatisticsLogger';
+
 
 const DOMAIN = 0x0000;
 
@@ -32,8 +33,6 @@ export default class EntryAbility extends UIAbility {
         return;
       }
       hilog.info(DOMAIN, 'testTag', 'Succeeded in loading the content.');
-
-
       windowStage.getMainWindow().then((value) => {
         //初始化埋点
         let uiContext = value.getUIContext()
@@ -41,6 +40,8 @@ export default class EntryAbility extends UIAbility {
       }).catch((error: object) => {
 
       })
+
+
     });
   }
 
@@ -61,31 +62,53 @@ export default class EntryAbility extends UIAbility {
 
 
   initStatistics(uiContext: UIContext) {
+
     let config = new StatisticsConfig()
     config.enableLog = true
     config.autoTrackTypes =
-      new Set([StatisticsType.APP_CLICK, StatisticsType.APP_VIEW_SCREEN, StatisticsType.APP_PAGE_LEAVE])
+      new Set([StatisticsType.APP_CLICK,
+        StatisticsType.APP_VIEW_SCREEN,
+        StatisticsType.APP_PAGE_LEAVE,
+        StatisticsType.APP_START,
+        StatisticsType.APP_START_PASSIVELY,
+        StatisticsType.APP_END,
+        StatisticsType.APP_CRASH,
+        StatisticsType.APP_INSTALL,])
+
+    let persistentProperty: object = new Object()
+    persistentProperty["a"] = 1
+    persistentProperty["b"] = 2
+
+    config.persistentProperty = persistentProperty
+
+    config.dynamicProperty = () => {
+      let dynamicProperty: object = new Object()
+      dynamicProperty["time"] = new Date().getTime()
+      dynamicProperty["login_id"] = util.generateRandomUUID()
+      return dynamicProperty
+    }
+
     config.statisticsGetCallback = (statisticsType, statisticsProperty,
       customComponentProperty,
       persistentProperty, dynamicProperty) => {
-      Logger.warn('----------------------一个埋点开始---------------------------')
-      Logger.debug("埋点类型:" + getEventType(statisticsType))
-      Logger.debug("埋点属性:\n" + statisticsProperty)
-      Logger.debugJson("埋点属性:" ,statisticsProperty)
+      StatisticsLogger.warn('----------------------一个埋点开始---------------------------')
+      StatisticsLogger.debug("埋点类型:" + getEventType(statisticsType))
+      StatisticsLogger.debugJson("框架赋予埋点属性:", statisticsProperty)
       if (customComponentProperty) {
-        Logger.debug("埋点自定义属性:\n" + JSON.stringify(customComponentProperty))
+        StatisticsLogger.debugJson("埋点组件上自定义属性:", customComponentProperty)
       }
       if (persistentProperty) {
-        Logger.debug("全局埋点静态属性:\n" + persistentProperty)
+        StatisticsLogger.debugJson("全局埋点静态属性:", persistentProperty)
       }
       if (dynamicProperty) {
-        Logger.debug("全局埋点动态属性:\n" + dynamicProperty)
+        StatisticsLogger.debugJson("全局埋点动态属性:", dynamicProperty)
       }
-      Logger.warn('----------------------一个埋点结束---------------------------')
+      StatisticsLogger.warn('----------------------一个埋点结束---------------------------')
 
     }
 
-    StatisticsManager.getInstance().register(config, uiContext, this.context,EntryAbility)
+
+    StatisticsManager.getInstance().register(config, uiContext, this.context, EntryAbility)
 
   }
 }

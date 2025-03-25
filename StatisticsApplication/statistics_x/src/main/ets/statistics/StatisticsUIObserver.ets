@@ -1,4 +1,4 @@
-import Logger from "../Log/Logger"
+import Logger from "../Log/StatisticsLogger"
 import { FrameNodeUtil } from "../util/FrameNodeUtil"
 import { PageInfo, uiObserver } from "@kit.ArkUI"
 import { HashMap } from "@kit.ArkTS"
