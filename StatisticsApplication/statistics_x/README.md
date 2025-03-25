@@ -42,7 +42,7 @@
 
 ---
 
-ohpm install @shhzcj/statistics-x
+ohpm install @shhzcj/statistics_x
 
 <br>
 
