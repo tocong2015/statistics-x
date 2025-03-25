@@ -1,13 +1,11 @@
 # statistics_x
 
----
 #### 专门为OpenHarmony开发的埋点库，支持非侵入式自动埋点和手动埋点，更加轻便和简单。
 
 ## 简介
 
----
 #### 本库支持*router*和*navigation*混合路由的页面展示隐藏监听，同时也支持UI组件上的自定义属性的点击监听。
- 
+
 - 支持自动埋点事件 应用启动(APP_START)
 - 支持自动埋点事件 应用被动启动(APP_START_PASSIVELY)
 - 支持自动埋点事件 应用退出(APP_END)
@@ -19,7 +17,7 @@
 - 支持自动埋点事件 应用崩溃(APP_CRASH)
 - 支持自动埋点事件 应用首次安装(APP_INSTALL)
 - 支持手动埋点事件 手动发送(NO_AUTO)  
-<br>
+  <br>
 
 
 #### 事件属性说明
@@ -40,7 +38,7 @@
 
 ## 下载安装
 
----
+
 
 ohpm install @shhzcj/statistics_x
 
@@ -49,7 +47,7 @@ ohpm install @shhzcj/statistics_x
 
 ## 类说明
 
-----
+
 ##### 配置类:StatisticsConfig
 
 | 属性名称          | 属性类型               | 属性描述    |
@@ -88,7 +86,6 @@ ohpm install @shhzcj/statistics_x
 
 ## 使用案例
 
----
 
 ##### EntryAbility
 ```typescript 
@@ -207,7 +204,7 @@ export default class EntryAbility extends UIAbility {
 <br>
 
 ## 约束和限制
----
+
 
 在下述版本验证通过：
 
@@ -220,12 +217,11 @@ Build Version: 5.0.9.300, built on March 13, 2025
 
 ## 开源协议
 
----
 本项目基于 Apache License 2.0 ，请自由的享受和参与开源。
 
 ## 联系我们
 
----
+
 
 这是一个开源项目，如果您在使用过程中有任何问题 或者 有什么改进的建议，欢迎联系我们。
 邮箱地址：tocongshanghai@163.com

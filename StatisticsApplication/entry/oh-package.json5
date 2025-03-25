@@ -6,7 +6,7 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "statistics_x": "file:../statistics_x"
+    "@shhzcj/statistics_x": "file:../statistics_x"
   }
 }
 

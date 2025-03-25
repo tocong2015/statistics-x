@@ -1,8 +1,8 @@
 import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { window } from '@kit.ArkUI';
-import { getEventType, StatisticsConfig, StatisticsManager, StatisticsType } from '@shhzcj/statistics_x';
+import { getEventType, StatisticsConfig, StatisticsManager, StatisticsType } from 'statistics_x';
 import { util } from '@kit.ArkTS';
-import StatisticsLogger from '@shhzcj/statistics_x/src/main/ets/Log/StatisticsLogger';
+import StatisticsLogger from 'statistics_x/src/main/ets/Log/StatisticsLogger';
 
 
 const DOMAIN = 0x0000;
@@ -108,8 +108,3 @@ export default class EntryAbility extends UIAbility {
   }
 
 }
-
-
-
-
-
