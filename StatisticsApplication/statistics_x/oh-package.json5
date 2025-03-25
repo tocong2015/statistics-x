@@ -1,9 +1,11 @@
 {
   "name": "statistics_x",
   "version": "1.0.0",
-  "description": "Please describe the basic information.",
+  "description": "这是一个支持自动埋点和手动埋点的库",
   "main": "Index.ets",
-  "author": "",
+  "author": {"name": "shhzcj","email": "tocongshanghai@163.com"},
   "license": "Apache-2.0",
+  "keywords": ["埋点","全埋点","sensor","神策","手动埋点","statistics","event"],
+  "repository": "https://github.com/tocong2015/statistics-x.git",
   "dependencies": {}
 }
