@@ -223,6 +223,8 @@ export class StatisticsUIObserver {
       let property: object = new Object()
       property["is_first_day"] = this._isFirstDay
       property["is_first_time"] = this._isFirstLaunch
+      property["referer_url"] = this.refererPageUrl
+      property["current_url"] = this.currentPageUrl
 
       StatisticsManager.getInstance().config?.statisticsGetCallback!(StatisticsType.APP_END,
         property, undefined,
@@ -239,6 +241,42 @@ export class StatisticsUIObserver {
       property["is_first_day"] = this._isFirstDay
       property["is_first_time"] = this._isFirstLaunch
       StatisticsManager.getInstance().config?.statisticsGetCallback!(StatisticsType.APP_START,
+        property,
+        undefined,
+        StatisticsManager.getInstance().config!.persistentProperty,
+        StatisticsManager.getInstance().config!.dynamicProperty?.()
+      )
+    }
+  }
+
+  sendAppForegroundProperty() {
+    if (StatisticsManager.getInstance().haveSpecialStatisticsType(StatisticsType.APP_FOREGROUND) &&
+      StatisticsManager.getInstance().config != null &&
+    StatisticsManager.getInstance().config.statisticsGetCallback) {
+      let property: object = new Object()
+      property["is_first_day"] = this._isFirstDay
+      property["is_first_time"] = this._isFirstLaunch
+      property["referer_url"] = this.refererPageUrl
+      property["current_url"] = this.currentPageUrl
+      StatisticsManager.getInstance().config?.statisticsGetCallback!(StatisticsType.APP_FOREGROUND,
+        property,
+        undefined,
+        StatisticsManager.getInstance().config!.persistentProperty,
+        StatisticsManager.getInstance().config!.dynamicProperty?.()
+      )
+    }
+  }
+
+  sendAppBackgroundProperty() {
+    if (StatisticsManager.getInstance().haveSpecialStatisticsType(StatisticsType.APP_BACKGROUND) &&
+      StatisticsManager.getInstance().config != null &&
+    StatisticsManager.getInstance().config.statisticsGetCallback) {
+      let property: object = new Object()
+      property["is_first_day"] = this._isFirstDay
+      property["is_first_time"] = this._isFirstLaunch
+      property["referer_url"] = this.refererPageUrl
+      property["current_url"] = this.currentPageUrl
+      StatisticsManager.getInstance().config?.statisticsGetCallback!(StatisticsType.APP_BACKGROUND,
         property,
         undefined,
         StatisticsManager.getInstance().config!.persistentProperty,

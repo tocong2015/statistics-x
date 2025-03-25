@@ -7,6 +7,8 @@ export enum StatisticsType {
   NO_AUTO, //手动埋点
   APP_START, //应用启动
   APP_START_PASSIVELY, //被动打开
+  APP_FOREGROUND,//应用进入前台
+  APP_BACKGROUND,//应用进入后台
   APP_END, //应用退出
   APP_CLICK, //元素点击
   APP_VIEW_SCREEN, //页面浏览

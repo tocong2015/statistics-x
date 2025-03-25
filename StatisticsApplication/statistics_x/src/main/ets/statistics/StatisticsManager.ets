@@ -49,10 +49,17 @@ export class StatisticsManager {
   }
 
   private initAspect(entryAbility: Object) {
+    StatisticsUIObserver.getInstance().sendAppStartStatisticsProperty()
+    StatisticsUIObserver.getInstance().sendAppInstall()
+    StatisticsUIObserver.getInstance().sendAppCrash()
 
     util.Aspect.addBefore(entryAbility, "onBackground", false, () => {
       StatisticsLogger.debug("进入后台")
-      StatisticsUIObserver.getInstance().sendAppDestroyStatisticsProperty()
+      StatisticsUIObserver.getInstance().sendAppBackgroundProperty()
+    })
+    util.Aspect.addBefore(entryAbility, "onForeground", false, () => {
+      StatisticsLogger.debug("进去前台")
+      StatisticsUIObserver.getInstance().sendAppForegroundProperty()
     })
 
     util.Aspect.addBefore(entryAbility, "onDestroy", false, () => {
@@ -60,18 +67,10 @@ export class StatisticsManager {
       StatisticsUIObserver.getInstance().sendAppDestroyStatisticsProperty()
     })
 
-    util.Aspect.addBefore(entryAbility, "onForeground", false, () => {
-      StatisticsLogger.debug("进去前台")
-      StatisticsUIObserver.getInstance().sendAppStartStatisticsProperty()
-    })
-
     util.Aspect.addBefore(entryAbility, "onNewWant", false, (want: Want, launchParam: AbilityConstant.LaunchParam) => {
       StatisticsLogger.debug("被动打开")
       StatisticsUIObserver.getInstance().sendAppStartPassively()
     })
-
-    StatisticsUIObserver.getInstance().sendAppInstall()
-    StatisticsUIObserver.getInstance().sendAppCrash()
 
 
   }
